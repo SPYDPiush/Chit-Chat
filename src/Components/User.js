@@ -1,6 +1,26 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import img from "../images/gallery.png";
+import { AuthContext } from "../Context/Authcontext";
+import { onSnapshot } from "firebase/firestore";
+import { collection, query, where,getDoc,setDoc,doc, updateDoc, serverTimestamp } from "firebase/firestore";
+import {db} from "../Firebase";
 const User= ()=>{
+
+    const {currentuser} = useContext(AuthContext);
+
+
+    const [chats,setChats] = useState([])
+
+    useEffect(()=>{
+
+        const unsub = onSnapshot(doc(db,"userChats",currentuser.uid),(snapshot)=>{
+            setChats(snapshot.data());
+        })
+
+    },[currentuser.uid])
+
+    console.log(chats)
+
     return(
         <div className="flex flex-col justify-center overflow-auto" style={{maxHeight:"460px"}}>
             <div className="flex gap-4 my-1 p-3 items-center text-white cursor-pointer hover:bg-[#121830]">
